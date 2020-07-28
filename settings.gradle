@@ -1,0 +1,3 @@
+include ':xedit'
+include ':app'
+rootProject.name = "XEditText"
