@@ -1,10 +1,29 @@
 # XEditText
 
-    An EditText library with multi funtions which is based on native EditText.You can set description、drawable(left or right)and underline.
+[![](https://jitpack.io/v/xiaojigugu/XEditText.svg)](https://jitpack.io/#xiaojigugu/XEditText)
+
+    An EditText library with multi funtions which is based on native EditText.
+    You can set description、drawable(left or right)and underline.
 
 ![XEditText](https://s1.ax1x.com/2020/07/28/aAyPvn.png)
 
 #### USE:
+
+```groovy
+//Add it in your root build.gradle at the end of repositories:
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+//Add the dependency
+	dependencies {
+	        implementation 'com.github.xiaojigugu:XEditText:1.0'
+	}
+```
+
+
 
 ```xml
    <com.junt.xedit.XEditText
