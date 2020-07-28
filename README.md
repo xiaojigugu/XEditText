@@ -124,26 +124,26 @@
 | XE_description_text_Size          | default: 14sp                                                |
 | XE_description_text_Color_normal  | default: Color.LTGRAY                                        |
 | XE_description_text_Color_focused | default: des_text_color_normal                               |
-| XE_srcLeft_normal                 | accept  .xml/ img/color                                      |
-| XE_srcLeft_focused                | accept  .xml/ img/color                                      |
-| XE_srcRight_normal                | accept  .xml/ img/color                                      |
-| XE_srcRight_focused               | accept  .xml/ img/color                                      |
+| XE_srcLeft_normal                 | accept  xml/ img/color                                       |
+| XE_srcLeft_focused                | accept  xml/ img/color                                       |
+| XE_srcRight_normal                | accept  xml/ img/color                                       |
+| XE_srcRight_focused               | accept  xml/ img/color                                       |
 | XE_srcRight_visible               | INVISIBLE、VISIBLE、FOCUSED、UNFOCUSED                       |
 | XE_srcLeft_visible                | INVISIBLE、VISIBLE、FOCUSED、UNFOCUSED                       |
-| XE_srcLeftBasis                   | relative to total width，will not greater than the height of EditText |
-| XE_srcRightBasis                  | relative to total width，will not greater than the height of EditText |
-| XE_text                           | default text showed in EditText                              |
-| XE_textSize                       | TextSize of EditText                                         |
-| XE_textColor                      | TextColor of EditText                                        |
+| XE_srcLeftBasis                   | the percent of srcleft's width relative to total width，will not greater than the height of EditText |
+| XE_srcRightBasis                  | the percent of srcleft's width relative to total width，will not greater than the height of EditText |
+| XE_text                           | default text shown in EditText                               |
+| XE_textSize                       | TextSize of EditText，default: 14sp                          |
+| XE_textColor                      | TextColor of EditText, default: Color.BLACK                  |
 | XE_hint                           | hint of EditText                                             |
-| XE_hintTextColor                  | hintTextColor of EditText                                    |
-| XE_underLine_height               | height of underline                                          |
-| XE_underLine_normal               | accept  .xml/ img/color                                      |
-| XE_underLine_focused              | accept  .xml/ img/color                                      |
-| XE_gravity                        | gravity of underline                                         |
-| XE_inputType                      | inputType  of EditText                                       |
-| XE_maxLines                       | max height of EditText                                       |
-| XE_lines                          | height of EditText                                           |
-| XE_maxLength                      | maxLength of EditText                                        |
-| XE_imeOptions                     | imeOptions of EditText                                       |
+| XE_hintTextColor                  | hintTextColor of EditText, default: Color.GRAY               |
+| XE_underLine_height               | height of underline, default: 1dp                            |
+| XE_underLine_normal               | accept  xml/ img/color                                       |
+| XE_underLine_focused              | accept  xml/ img/color                                       |
+| XE_gravity                        | gravity of EditText, default: Gravity.CENTER_VERTICAL        |
+| XE_inputType                      | inputType  of EditText, default: none                        |
+| XE_maxLines                       | max height of EditText, default: 1                           |
+| XE_lines                          | height of EditText, default: no limit                        |
+| XE_maxLength                      | maxLength of EditText, default: no limit                     |
+| XE_imeOptions                     | imeOptions of EditText,default: normal                       |
 
