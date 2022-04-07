@@ -1,5 +1,6 @@
 package com.junt.xedit;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -21,19 +22,19 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
 
-//    private static final String TAG = "XEditText";
     /**
      * 输入框是否拥有焦点
      */
     private boolean isFocused;
     private int width, height;
-    private int touchSlop;
+    private final int touchSlop;
 
-    private TextPaint textPaint;
+    private final TextPaint textPaint;
 
     /**
      * 左右两侧图片宽度
@@ -150,7 +151,7 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
     /**
      * 输入框
      */
-    private EditText editText;
+    private final EditText editText;
     /**
      * 文字变化监听
      */
@@ -166,6 +167,8 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
      */
     private OnXEditListener onXEditListener;
     private int inputTyp;
+
+    private final InputMethodManager inputManager;
 
     public XEditText(Context context) {
         this(context, null);
@@ -185,6 +188,7 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
 
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
+        inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         editText = new EditText(context);
         editText.setBackground(null);
         editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
@@ -244,7 +248,7 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
         underlineNormalDrawable = typedArray.getDrawable(R.styleable.XEditText_XE_underLine_normal);
         underlineFocusedDrawable = typedArray.getDrawable(R.styleable.XEditText_XE_underLine_focused);
 
-        gravity=typedArray.getInt(R.styleable.XEditText_XE_gravity,Gravity.CENTER_VERTICAL);
+        gravity = typedArray.getInt(R.styleable.XEditText_XE_gravity, Gravity.CENTER_VERTICAL);
         inputTyp = typedArray.getInt(R.styleable.XEditText_XE_inputType, InputType.TYPE_NULL);
         maxLines = typedArray.getInt(R.styleable.XEditText_XE_maxLines, 1);
         lines = typedArray.getInt(R.styleable.XEditText_XE_lines, -1);
@@ -292,7 +296,7 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
     /**
      * 绘制下划线
      *
-     * @param canvas
+     * @param canvas canvas
      */
     private void drawUnderLine(Canvas canvas) {
         Drawable underlineDrawable = null;
@@ -308,7 +312,7 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
     /**
      * 绘制两侧图案
      *
-     * @param canvas
+     * @param canvas canvas
      */
     private void drawSrc(Canvas canvas) {
         Drawable srcLeftDrawable = null, srcRightDrawable = null;
@@ -339,7 +343,7 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
     /**
      * 绘制描述文字
      *
-     * @param canvas
+     * @param canvas canvas
      */
     private void drawDes(Canvas canvas) {
         textPaint.setTextSize(des_text_size);
@@ -370,12 +374,16 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (srcLeftNormalDrawable != null && ev.getX() < srcLeftWidth) {
+        if (srcLeftNormalDrawable != null && ev.getX() < editText.getLeft()) {
             srcLoc = SrcLoc.LEFT;
             return true;
         }
-        if (srcRightNormalDrawable != null && ev.getX() > width - getPaddingLeft() - srcRightWidth) {
+        if (srcRightNormalDrawable != null && ev.getX() > editText.getRight()) {
             srcLoc = SrcLoc.RIGHT;
+            return true;
+        }
+        if (ev.getX() >= editText.getLeft() && ev.getX() <= editText.getRight()) {
+            srcLoc = SrcLoc.INPUT;
             return true;
         }
         return super.onInterceptTouchEvent(ev);
@@ -385,6 +393,7 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
     private float downX;
     private float downY;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -396,8 +405,14 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
                 float x = event.getX();
                 float y = event.getY();
                 double hypot = Math.hypot(x - downX, y - downY);
-                if (hypot <= touchSlop && onXEditListener != null) {
-                    onXEditListener.onSrcClick(XEditText.this, srcLoc);
+                if (hypot <= touchSlop) {
+                    if (srcLoc == SrcLoc.INPUT) {
+                        editText.requestFocus();
+                        inputManager.showSoftInput(editText, 0);
+                    }
+                    if (onXEditListener != null) {
+                        onXEditListener.onSrcClick(XEditText.this, srcLoc);
+                    }
                 }
                 break;
         }
@@ -469,7 +484,8 @@ public class XEditText extends ViewGroup implements View.OnFocusChangeListener {
 
     public enum SrcLoc {
         LEFT,
-        RIGHT
+        RIGHT,
+        INPUT
     }
 
     /**
